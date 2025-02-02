@@ -26,7 +26,7 @@ export default function Register() {
         content: "Đăng ký thành công",
       });
       form.resetFields();
-      navigate("/login");
+      navigate("/");
     } else {
       setSpining(false);
       messageApi.open({

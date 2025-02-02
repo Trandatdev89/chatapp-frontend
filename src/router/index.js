@@ -9,7 +9,8 @@ import ChatRoom from "../page/PublicPage/ChatRoom.jsx";
 import CreateRoom from "../page/PublicPage/CreateRoom.jsx";
 export const route = [
   {
-    path: "/login",
+    index:true,
+    path: "/",
     element: <Login />,
   },
   {

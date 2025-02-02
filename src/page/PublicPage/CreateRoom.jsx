@@ -34,17 +34,12 @@ export default function CreateRoom() {
     },
   ];
 
+  console.log(option);
+
   const handleFinish = async (value) => {
     value.picture = document.getElementById("picture").files[0];
     const res = await createChatRoom(value, token);
-    const result = await addUserToGroup(
-      {
-        idUser: value.idUser,
-        chatRoomId: res.data.id,
-      },
-      token
-    );
-    if (result.code === 200) {
+    if (res.code === 200) {
       messageApi.open({
         type: "success",
         content: "Cập nhập thành công",
@@ -105,7 +100,7 @@ export default function CreateRoom() {
                       <Form.Item
                         rules={rules}
                         label="Danh sách user"
-                        name="idUser"
+                        name="userId"
                       >
                         <Select
                           mode="multiple"

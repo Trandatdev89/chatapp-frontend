@@ -6,7 +6,6 @@ import chatapp from "../Components/img/images.png";
 import { useDispatch } from "react-redux";
 import { ReloadUser } from "../Action/index";
 import { login } from "../Services/AuthServices";
-import { loginGoogle } from "../Services/GoogleServices";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,7 +24,6 @@ export default function Login() {
       password: password,
     };
     const result = await login(data);
-    console.log(result);
     if (result.data) {
       messageApi.open({
         type: "success",
@@ -51,10 +49,6 @@ export default function Login() {
       ...option,
       [name]: value,
     });
-  };
-
-  const handleLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   };
 
   return (
@@ -133,11 +127,7 @@ export default function Login() {
                             </button>
                           </div>
                         </form>
-                        <div className="d-flex align-items-center justify-content-center pb-4">
-                          <button type="button" class="login-with-google-btn" onClick={handleLogin}>
-                              Sign in with Google
-                          </button>
-                        </div>
+
                         <div className="d-flex align-items-center justify-content-center pb-4">
                           <p className="mb-0 me-2">Don't have an account?</p>
                           <Link to="/register">

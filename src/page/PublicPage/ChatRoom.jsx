@@ -1,11 +1,14 @@
 import { Stomp } from "@stomp/stompjs";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { jwtDecode } from "jwt-decode";
-import { getMyInfo, getUserByChatRoomId, leaveRoom } from "../../Services/UserServices";
+import {
+  getMyInfo,
+  getUserByChatRoomId,
+  leaveRoom,
+} from "../../Services/UserServices";
 import { blockUser, getChatRoomById } from "../../Services/ChatRoomServices";
-import getDate from "../../helper/getDate";
 import { Button, Drawer, Form, Select } from "antd";
 
 export default function ChatRoom() {
@@ -19,8 +22,8 @@ export default function ChatRoom() {
   const [inputMessage, setInputMessage] = useState();
   const params = useParams();
   const [open1, setOpen1] = useState(false);
-  const [data,setData]=useState([]);
-
+  const [data, setData] = useState([]);
+  const navigate=useNavigate();
 
   const showDrawer = () => {
     setOpen1(true);
@@ -85,8 +88,8 @@ export default function ChatRoom() {
     fetchAPI();
   }, [params.id]);
 
-  const handleClick = async() => {
-    const userChat= await getUserByChatRoomId(params.id, token);
+  const handleClick = async () => {
+    const userChat = await getUserByChatRoomId(params.id, token);
     const result = userChat.data.map((item) => ({
       label: item.username,
       value: item.id,
@@ -95,31 +98,31 @@ export default function ChatRoom() {
     setOpen(!open);
   };
 
-  const handleLeave = async() => {
-    const res=await leaveRoom({
-      idUser:[parseInt(tokenDecode.sub)],
-      chatRoomId:parseInt(params.id)
-    },token);
-    if(res.code===200){
-      alert("Rời thành công")
-    }
-    else{
-      alert("Rời không thành công")
+  const handleLeave = async () => {
+    const res = await leaveRoom(
+      {
+        idUser: [parseInt(tokenDecode.sub)],
+        chatRoomId: parseInt(params.id),
+      },
+      token
+    );
+    if (res.code === 200) {
+      alert("Rời thành công");
+      navigate("/chatapp");
+    } else {
+      alert("Rời không thành công");
     }
   };
 
-  const handleFinish=async(value)=>{
-     value.chatRoomId=params.id;
-     const res=await blockUser(value,token);
-     if(res.code===200){
-      alert("Block thành công")
+  const handleFinish = async (value) => {
+    value.chatRoomId = params.id;
+    const res = await blockUser(value, token);
+    if (res.code === 200) {
+      alert("Block thành công");
+    } else {
+      alert("Block không thành công");
     }
-    else{
-      alert("Block không thành công")
-    }
-  }
-
-
+  };
 
   return (
     <>
@@ -155,49 +158,72 @@ export default function ChatRoom() {
                 <li onClick={handleLeave}>
                   <i class="fas fa-users"> Leave ChatRoom</i>
                 </li>
-                {tokenDecode.scope==="ADMIN"&&( <li onClick={showDrawer}>
-                  <i class="fas fa-ban"></i> Block
-                </li>)}
-               
+                {tokenDecode.scope === "ADMIN" && (
+                  <li onClick={showDrawer}>
+                    <i class="fas fa-ban"></i> Block
+                  </li>
+                )}
               </ul>
             </div>
           </div>
-          <div
+          {message.length>0 ? (
+            <div
             class="card-body msg_card_body"
             style={{ maxHeight: "500px", overflowY: "auto" }}
           >
-            {message
-              .sort((a, b) => a.id - b.id)
-              .map((item, index) => {
-                if (item.senderId === parseInt(tokenDecode.sub)) {
-                  return (
-                    <div class="d-flex justify-content-end mb-4" key={index}>
-                      <div class="msg_cotainer_send">
-                        {item.message}
-                        <span class="msg_time_send">{item.date}</span>
-                      </div>
-                      
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div class="d-flex justify-content-start mb-4" key={index}>
-                      <div class="img_cont_msg">
-                        <img
-                          src={item?.picture!=null ?(item?.picture) :("https://therichpost.com/wp-content/uploads/2020/06/avatar2.png")}
-                          class="rounded-circle user_img_msg"
-                          alt="loding..."
-                        />
-                      </div>
-                      <div class="msg_cotainer">
-                        {item.message}
-                        <span class="msg_time">{item.date}</span>
-                      </div>
-                    </div>
-                  );
-                }
-              })}
+            <div className="wrap" style={{"display":"flex","flexDirection":"column"}}>
+              {message
+                .sort((a, b) => a.id - b.id)
+                .map((item, index) => {
+                  if (item.senderId === parseInt(tokenDecode.sub)) {
+                    return (
+                      <>
+                        <div class="d-flex justify-content-end mx-2">{item.senderName}</div>
+                        <div
+                          class="d-flex justify-content-end mb-4"
+                          key={index}
+                        >
+                          <div class="msg_cotainer_send">
+                            {item.message}
+                            <span class="msg_time_send">{item.date}</span>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <>
+                        <div class="d-flex justify-content-start ms-5">{item.senderName}</div>
+                        <div
+                          class="d-flex justify-content-start mb-4"
+                          key={index}
+                        >
+                          <div class="img_cont_msg">
+                            <img
+                              src={
+                                item?.picture != null
+                                  ? item?.picture
+                                  : "https://therichpost.com/wp-content/uploads/2020/06/avatar2.png"
+                              }
+                              class="rounded-circle user_img_msg"
+                              alt="loding..."
+                            />
+                          </div>
+                          <div class="msg_cotainer">
+                            {item.message}
+                            <span class="msg_time">{item.date}</span>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  }
+                })}
+            </div>
           </div>
+          ):(
+            <h5 style={{color:"#fff",margin:"0 10px"}}>Đang tải tin nhắn</h5>
+          )}
+          
           <div class="card-footer">
             <div class="input-group">
               <div class="input-group-append">
@@ -229,12 +255,8 @@ export default function ChatRoom() {
         </div>
       </div>
       <Drawer title="Block User" onClose={onClose} open={open1}>
-        <Form
-          size="large"
-          layout="vertical"
-          onFinish={handleFinish}
-        >
-          <Form.Item  label="Danh sách user" name="idUser">
+        <Form size="large" layout="vertical" onFinish={handleFinish}>
+          <Form.Item label="Danh sách user" name="idUser">
             <Select
               mode="multiple"
               allowClear

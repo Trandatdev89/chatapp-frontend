@@ -1,5 +1,5 @@
-const API_DOMAIN="http://localhost:8080/";
-
+// const API_DOMAIN="http://localhost:8080/";
+const API_DOMAIN="https://chatapp-backend-kr6t.onrender.com/";
 export const get=async(path)=>{
     const response=await fetch(API_DOMAIN+path);
     const data=await response.json();

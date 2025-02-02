@@ -15,16 +15,15 @@ export default function PrivateRoute({ allowedRoles }) {
     }, 259200000);
   
     if (!token) {
-      return <Navigate to="/login" />;
+      return <Navigate to="/" />;
     }
     try {
       const tokenDecode = jwtDecode(token);
       const expiryTimeSeconds = tokenDecode.exp;
       const currentTimeSeconds = Math.floor(new Date().getTime() / 1000);
-  
       if (currentTimeSeconds > expiryTimeSeconds) {
         localStorage.removeItem("token");
-        return <Navigate to="/login" />;
+        return <Navigate to="/" />;
       } else {
         if(!allowedRoles.includes(tokenDecode.scope)){
            return <Navigate to="/fobiden"/>
@@ -37,6 +36,6 @@ export default function PrivateRoute({ allowedRoles }) {
         }
       }
     } catch (error) {
-      <Navigate to="/login" />;
+      <Navigate to="/" />;
     }
 }

@@ -16,7 +16,7 @@ export default function Logout() {
           const token=localStorage.getItem("token");
           const res = await logoutServices(token);
           localStorage.removeItem("token");
-          navigate("/login");
+          navigate("/");
         };
         fetchAPI();
       }
