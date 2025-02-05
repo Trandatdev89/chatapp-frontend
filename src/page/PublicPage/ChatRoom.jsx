@@ -33,7 +33,7 @@ export default function ChatRoom() {
   };
 
   useEffect(() => {
-    const connect = new SockJS("http://localhost:8080/ws");
+    const connect = new SockJS("https://chatapp-backend-kr6t.onrender.com/ws");
     const dat = Stomp.over(connect);
 
     dat.connect({ Authorization: `Bearer ${token}` }, async () => {

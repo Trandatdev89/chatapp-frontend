@@ -54,7 +54,6 @@ export default function Sider() {
     fetchAPI();
   }, []);
 
-  console.log(chatRoom);
 
   const handleClick = async () => {
     const res = await searchUserOrGroup({ title: search }, token);

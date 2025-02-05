@@ -17,7 +17,7 @@ export default function Friend() {
   const param = useParams();
 
   const connect = () => {
-    let Sock = new SockJS("http://localhost:8080/ws");
+    let Sock = new SockJS("https://chatapp-backend-kr6t.onrender.com/ws");
     stompClient = Stomp.over(Sock);
     stompClient.connect({}, onConnected, onError);
   };
