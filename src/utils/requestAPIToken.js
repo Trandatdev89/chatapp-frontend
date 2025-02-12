@@ -1,5 +1,5 @@
-// const API_DOMAIN = "http://localhost:8080/";
-const API_DOMAIN="https://chatapp-backend-kr6t.onrender.com/";
+const API_DOMAIN = "http://localhost:8080/";
+// const API_DOMAIN="https://chatapp-backend-kr6t.onrender.com/";
 
 
 export const getAttachToken = async (path,token) => {
